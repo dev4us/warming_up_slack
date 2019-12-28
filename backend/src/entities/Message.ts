@@ -18,6 +18,9 @@ class Message extends BaseEntity {
   nickname: string;
 
   @Column({ type: "text", nullable: false })
+  thumbnail: string;
+
+  @Column({ type: "text", nullable: false })
   contents: string;
 
   @ManyToOne(

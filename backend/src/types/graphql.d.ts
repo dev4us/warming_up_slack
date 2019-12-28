@@ -1,6 +1,4 @@
-export const typeDefs = [
-  "type CreateChannelResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Mutation {\n  CreateChannel(channelName: String!): CreateChannelResponse!\n  SendMessage(nickname: String!, contents: String!, innerChannelId: Int!): SendMessageResponse!\n}\n\ntype GetChannelsResponse {\n  ok: Boolean!\n  error: String\n  channels: [Channel]\n}\n\ntype Query {\n  GetChannels: GetChannelsResponse!\n  GetMessages(innerChannelId: Int!): GetMessagesReponse!\n}\n\ntype Channel {\n  id: Int!\n  channelName: String!\n  messages: [Message]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetMessagesReponse {\n  ok: Boolean!\n  error: String\n  messages: [Message]\n}\n\ntype SendMessageResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Message {\n  id: Int!\n  nickname: String!\n  contents: String!\n  innerChannel: Channel!\n  innerChannelId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n"
-];
+export const typeDefs = ["type CreateChannelResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Mutation {\n  CreateChannel(channelName: String!): CreateChannelResponse!\n  SendMessage(nickname: String!, contents: String!, thumbnail: String!, innerChannelId: Int!): SendMessageResponse!\n}\n\ntype Subscription {\n  CreateChannelSubscription: Channel\n  SendMessageSubscription: Message\n}\n\ntype GetChannelsResponse {\n  ok: Boolean!\n  error: String\n  channels: [Channel]\n}\n\ntype Query {\n  GetChannels: GetChannelsResponse!\n  GetMessages(innerChannelId: Int!): GetMessagesReponse!\n}\n\ntype Channel {\n  id: Int!\n  channelName: String!\n  messages: [Message]\n  createdAt: String!\n  updatedAt: String\n}\n\ntype GetMessagesReponse {\n  ok: Boolean!\n  error: String\n  messages: [Message]\n}\n\ntype SendMessageResponse {\n  ok: Boolean!\n  error: String\n}\n\ntype Message {\n  id: Int!\n  nickname: String!\n  contents: String!\n  thumbnail: String!\n  innerChannel: Channel!\n  innerChannelId: Int!\n  createdAt: String!\n  updatedAt: String\n}\n"];
 /* tslint:disable */
 
 export interface Query {
@@ -30,6 +28,7 @@ export interface Message {
   id: number;
   nickname: string;
   contents: string;
+  thumbnail: string;
   innerChannel: Channel;
   innerChannelId: number;
   createdAt: string;
@@ -54,6 +53,7 @@ export interface CreateChannelMutationArgs {
 export interface SendMessageMutationArgs {
   nickname: string;
   contents: string;
+  thumbnail: string;
   innerChannelId: number;
 }
 
@@ -65,4 +65,9 @@ export interface CreateChannelResponse {
 export interface SendMessageResponse {
   ok: boolean;
   error: string | null;
+}
+
+export interface Subscription {
+  CreateChannelSubscription: Channel | null;
+  SendMessageSubscription: Message | null;
 }
