@@ -1,5 +1,8 @@
 import { Resolvers } from "src/types/resolvers";
-import { SendMessageQueryArgs, SendMessageResponse } from "src/types/graphql";
+import {
+  SendMessageMutationArgs,
+  SendMessageResponse
+} from "src/types/graphql";
 import Channel from "../../../../src/entities/Channel";
 import Message from "../../../../src/entities/Message";
 
@@ -7,7 +10,7 @@ const resolvers: Resolvers = {
   Mutation: {
     SendMessage: async (
       _,
-      args: SendMessageQueryArgs
+      args: SendMessageMutationArgs
     ): Promise<SendMessageResponse> => {
       try {
         const { nickname, contents, innerChannelId } = args;
