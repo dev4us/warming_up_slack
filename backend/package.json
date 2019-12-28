@@ -8,12 +8,15 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "dotenv": "^8.2.0",
     "graphql-to-typescript": "^0.1.2",
     "graphql-tools": "^4.0.6",
     "graphql-yoga": "^1.18.3",
     "nodemon": "^2.0.2",
+    "pg": "^7.16.0",
     "ts-node": "^8.5.4",
     "tslint-config-prettier": "^1.18.0",
+    "typeorm": "^0.2.22",
     "typescript": "^3.7.4"
   },
   "devDependencies": {

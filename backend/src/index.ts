@@ -1,4 +1,5 @@
 import { GraphQLServer } from "graphql-yoga";
+import connection from "./ormConfig";
 
 const typeDefs = `
   type Query{
@@ -13,6 +14,8 @@ const resolvers = {
 
 const server = new GraphQLServer({ typeDefs, resolvers });
 
-server.start(() =>
-  console.log("My First GraphQL Server is running on localhost:4000")
+connection.then(() =>
+  server.start(() =>
+    console.log("My First GraphQL Server is running on localhost:4000")
+  )
 );
