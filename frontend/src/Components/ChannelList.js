@@ -1,15 +1,22 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { useQuery } from "react-apollo-hooks";
+import { GET_CHANNELS_QUERY } from "../queries";
 
 const ChannelList = () => {
+  const { data, loading } = useQuery(GET_CHANNELS_QUERY);
+  console.log(data);
   return (
     <MainFrame>
       <Title>Slack with GraphQL</Title>
       <SubTitle>참여 가능 채널 목록</SubTitle>
-      <Channel isActive={true}># blah-blah</Channel>
-      <Channel># frontend</Channel>
-      <Channel># backend</Channel>
-
+      {loading && <Channel>Now Loading...</Channel>}
+      {data &&
+        data.GetChannels &&
+        data.GetChannels.ok &&
+        data.GetChannels.channels.map((channels, index) => (
+          <Channel key={index}># {channels.channelName}</Channel>
+        ))}
       <CreateChannelFrame>
         <CreateChannelInput placeholder="input new channel" />
         <CreateChannelBtn>+</CreateChannelBtn>
