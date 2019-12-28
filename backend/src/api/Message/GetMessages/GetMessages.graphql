@@ -1,0 +1,9 @@
+type GetMessagesReponse {
+  ok: Boolean!
+  error: String
+  messages: [Message]
+}
+
+type Query {
+  GetMessages(innerChannelId: Int!): GetMessagesReponse!
+}

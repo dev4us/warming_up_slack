@@ -21,6 +21,7 @@ type Message {
   nickname: String!
   contents: String!
   innerChannel: Channel!
+  innerChannelId: Int!
   createdAt: String!
   updatedAt: String
 }
