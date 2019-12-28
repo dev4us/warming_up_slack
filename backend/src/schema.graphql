@@ -14,6 +14,12 @@ type GetMessagesReponse {
 
 type Query {
   GetMessages(innerChannelId: Int!): GetMessagesReponse!
+  SendMessage(nickname: String!, contents: String!, innerChannelId: Int!): SendMessageResponse!
+}
+
+type SendMessageResponse {
+  ok: Boolean!
+  error: String
 }
 
 type Message {
