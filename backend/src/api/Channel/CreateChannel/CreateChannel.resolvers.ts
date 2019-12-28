@@ -29,7 +29,7 @@ const resolvers: Resolvers = {
         }).save();
 
         pubSub.publish("newChannel", {
-          SendMessageSubscriCreateChannelSubscriptionption: newChannel
+          CreateChannelSubscription: newChannel
         });
 
         return {
