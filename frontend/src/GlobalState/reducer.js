@@ -1,5 +1,9 @@
+import faker from "faker";
+
 export const initialState = {
-  selectedChannelId: 1
+  selectedChannelId: 1,
+  nickname: faker.name.findName(),
+  thumbnail: faker.image.avatar()
 };
 
 const reducer = (state, action) => {

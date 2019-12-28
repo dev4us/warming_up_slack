@@ -1,25 +1,127 @@
-import React from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
+import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
+import { Store } from "../GlobalState/store";
 import styled from "styled-components";
+import {
+  GET_MESSAGES_QUERY,
+  SEND_MESSAGE,
+  MESSAGE_SUBSCRIPTION
+} from "../queries";
 
 const ChatList = () => {
+  const inputChat = useRef();
+  const scrollRef = useRef();
+
+  const { state } = useContext(Store);
+  const [message, setMessage] = useState("");
+
+  const { data } = useQuery(GET_MESSAGES_QUERY, {
+    variables: { innerChannelId: state.selectedChannelId }
+  });
+
+  useEffect(() => {
+    data &&
+      data.GetMessages &&
+      data.GetMessages.messages &&
+      scrollToBottom(data.GetMessages.messages.length);
+  }, [data]);
+  const [sendChat] = useMutation(SEND_MESSAGE);
+
+  const sendChatAction = () => {
+    sendChat({
+      variables: {
+        nickname: state.nickname,
+        contents: message,
+        thumbnail: state.thumbnail,
+        innerChannelId: state.selectedChannelId
+      }
+    });
+    setMessage("");
+    inputChat.current.focus();
+  };
+
+  useSubscription(MESSAGE_SUBSCRIPTION, {
+    onSubscriptionData: ({
+      client,
+      subscriptionData: {
+        data: { SendMessageSubscription }
+      }
+    }) => {
+      try {
+        let messages = client.readQuery({
+          query: GET_MESSAGES_QUERY,
+          variables: { innerChannelId: state.selectedChannelId }
+        }).GetMessages.messages;
+
+        if (
+          SendMessageSubscription.innerChannelId === state.selectedChannelId
+        ) {
+          messages.push(SendMessageSubscription);
+
+          client.writeQuery({
+            query: GET_MESSAGES_QUERY,
+            variables: { innerChannelId: state.selectedChannelId },
+            data: {
+              messages
+            }
+          });
+          scrollToBottom(messages.length);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
+
+  const setMessageByKey = e => {
+    if (e.key === "Enter") {
+      sendChatAction();
+    }
+  };
+
+  const TimeConverter = timestamp => {
+    if (!timestamp) {
+      return;
+    }
+    let timestamp_date = new Date(parseInt(timestamp));
+    const localString = timestamp_date.toLocaleString().split(".");
+    return localString[3];
+  };
+
+  const scrollToBottom = messageCount => {
+    scrollRef.current.scrollTo(0, messageCount * 80);
+  };
+
   return (
     <MainFrame>
-      <ChatListFrame>
-        <MessageFrame>
-          <Thumbnail></Thumbnail>
-          <ContentsFrame>
-            <ContentsInFrame>
-              <NickName>dev4us</NickName>
-              <DateTime>14:50 PM</DateTime>
-            </ContentsInFrame>
-            <ContentsInFrame>
-              <Contents>안녕?</Contents>
-            </ContentsInFrame>
-          </ContentsFrame>
-        </MessageFrame>
+      <ChatListFrame ref={scrollRef}>
+        {data &&
+          data.GetMessages &&
+          data.GetMessages.ok &&
+          data.GetMessages.messages.map((message, index) => (
+            <MessageFrame key={index}>
+              <Thumbnail background={message.thumbnail}></Thumbnail>
+              <ContentsFrame>
+                <ContentsInFrame>
+                  <NickName>{message.nickname}</NickName>
+                  <DateTime>{TimeConverter(message.createdAt)}</DateTime>
+                </ContentsInFrame>
+                <ContentsInFrame>
+                  <Contents>{message.contents}</Contents>
+                </ContentsInFrame>
+              </ContentsFrame>
+            </MessageFrame>
+          ))}
       </ChatListFrame>
       <ChatFrame>
-        <ChatInput type="text" placholder="input your message 😊"></ChatInput>
+        <ChatInput
+          type="text"
+          ref={inputChat}
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          onKeyPress={e => setMessageByKey(e)}
+          placholder="input your message 😊"
+        ></ChatInput>
       </ChatFrame>
     </MainFrame>
   );
@@ -50,7 +152,7 @@ const Thumbnail = styled.div`
   height: 45px;
   background: black;
   padding: 5px 5px 5px 5px;
-  background-image: url("https://stickershop.line-scdn.net/stickershop/v1/product/1050760/LINEStorePC/main.png;compress=true");
+  background-image: url(${props => props.background});
   background-size: cover;
   margin-top: 10px;
   border-radius: 5px;
