@@ -1,0 +1,7 @@
+type Channel {
+  id: Int!
+  channelName: String!
+  messages: [Message]
+  createdAt: String!
+  updatedAt: String
+}

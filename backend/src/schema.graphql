@@ -1,0 +1,26 @@
+type Channel {
+  id: Int!
+  channelName: String!
+  messages: [Message]
+  createdAt: String!
+  updatedAt: String
+}
+
+type GetMessagesReponse {
+  ok: Boolean!
+  error: String
+  messages: [Message]
+}
+
+type Query {
+  GetMessages(innerChannelId: Int!): GetMessagesReponse!
+}
+
+type Message {
+  id: Int!
+  nickname: String!
+  contents: String!
+  innerChannel: Channel!
+  createdAt: String!
+  updatedAt: String
+}

@@ -1,18 +1,8 @@
 import { GraphQLServer } from "graphql-yoga";
 import connection from "./ormConfig";
+import schema from "./schema";
 
-const typeDefs = `
-  type Query{
-    sayHello: String!
-  }
-`;
-const resolvers = {
-  Query: {
-    sayHello: () => "Hi there 🙂"
-  }
-};
-
-const server = new GraphQLServer({ typeDefs, resolvers });
+const server = new GraphQLServer({ schema });
 
 connection.then(() =>
   server.start(() =>
