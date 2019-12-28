@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Store } from "../GlobalState/store";
 import styled, { css } from "styled-components";
 import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
 import {
@@ -8,10 +9,19 @@ import {
 } from "../queries";
 
 const ChannelList = () => {
+  const { state, dispatch } = useContext(Store);
   const [channelName, setChannelName] = useState("");
 
   const { data, loading } = useQuery(GET_CHANNELS_QUERY);
   const [createChannel] = useMutation(CREATE_CHANNEL);
+
+  const switchChannel = id => {
+    dispatch({
+      type: "SET_VALUE",
+      target: "selectedChannelId",
+      payload: id
+    });
+  };
 
   useSubscription(CHANNELS_SUBSCRIPTION, {
     onSubscriptionData: ({
@@ -51,8 +61,14 @@ const ChannelList = () => {
       {data &&
         data.GetChannels &&
         data.GetChannels.ok &&
-        data.GetChannels.channels.map((channels, index) => (
-          <Channel key={index}># {channels.channelName}</Channel>
+        data.GetChannels.channels.map((channel, index) => (
+          <Channel
+            key={index}
+            isActive={state.selectedChannelId === channel.id}
+            onClick={() => switchChannel(channel.id)}
+          >
+            # {channel.channelName}
+          </Channel>
         ))}
       <CreateChannelFrame>
         <CreateChannelInput
