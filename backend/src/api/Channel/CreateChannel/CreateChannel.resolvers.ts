@@ -9,7 +9,8 @@ const resolvers: Resolvers = {
   Mutation: {
     CreateChannel: async (
       _,
-      args: CreateChannelMutationArgs
+      args: CreateChannelMutationArgs,
+      { pubSub }
     ): Promise<CreateChannelResponse> => {
       try {
         const { channelName } = args;
@@ -23,9 +24,13 @@ const resolvers: Resolvers = {
           };
         }
 
-        await Channel.create({
+        const newChannel = await Channel.create({
           channelName
         }).save();
+
+        pubSub.publish("newChannel", {
+          SendMessageSubscriCreateChannelSubscriptionption: newChannel
+        });
 
         return {
           ok: true,
