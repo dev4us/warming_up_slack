@@ -41,3 +41,6 @@
    yarn add --dev @types/node
 
 6. create .gitignore
+7. set Config nodemon, ts, lint, babel
+8. create your first server
+9. start your server
