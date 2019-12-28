@@ -20,3 +20,12 @@ export const CREATE_CHANNEL = gql`
     }
   }
 `;
+
+export const CHANNELS_SUBSCRIPTION = gql`
+  subscription CreateChannelSubscription {
+    CreateChannelSubscription {
+      id
+      channelName
+    }
+  }
+`;
