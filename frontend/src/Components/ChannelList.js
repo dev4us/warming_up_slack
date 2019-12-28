@@ -86,7 +86,7 @@ const ChannelList = () => {
 
 const MainFrame = styled.div`
   position: relative;
-  width: 250px;
+  min-width: 250px;
   height: 100%;
   padding: 15px 15px 15px 15px;
   background: #4d394b;
