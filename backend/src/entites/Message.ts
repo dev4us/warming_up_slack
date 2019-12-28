@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne
 } from "typeorm";
+import Channel from "./Channel";
 
 @Entity()
 class Message extends BaseEntity {
@@ -17,6 +19,12 @@ class Message extends BaseEntity {
 
   @Column({ type: "text", nullable: false })
   contents: string;
+
+  @ManyToOne(
+    type => Channel,
+    channel => channel.messages
+  )
+  innerChannel: Channel;
 
   @CreateDateColumn()
   createdAt: string;

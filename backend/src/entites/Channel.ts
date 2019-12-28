@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from "typeorm";
+import Message from "./Message";
 
 @Entity()
 class Channel extends BaseEntity {
@@ -14,6 +16,12 @@ class Channel extends BaseEntity {
 
   @Column({ type: "text", nullable: false })
   channelName: string;
+
+  @OneToMany(
+    type => Message,
+    message => message.innerChannel
+  )
+  messages: Message[];
 
   @CreateDateColumn()
   createdAt: string;
