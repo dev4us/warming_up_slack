@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import { useQuery } from "react-apollo-hooks";
-import { GET_CHANNELS_QUERY } from "../queries";
+import { useQuery, useMutation } from "react-apollo-hooks";
+import { GET_CHANNELS_QUERY, CREATE_CHANNEL } from "../queries";
 
 const ChannelList = () => {
+  const [channelName, setChannelName] = useState("");
+
   const { data, loading } = useQuery(GET_CHANNELS_QUERY);
-  console.log(data);
+  const [createChannel] = useMutation(CREATE_CHANNEL);
+
+  const createChannelAction = () => {
+    createChannel({
+      variables: {
+        channelName
+      }
+    });
+  };
+
   return (
     <MainFrame>
       <Title>Slack with GraphQL</Title>
@@ -18,8 +29,14 @@ const ChannelList = () => {
           <Channel key={index}># {channels.channelName}</Channel>
         ))}
       <CreateChannelFrame>
-        <CreateChannelInput placeholder="input new channel" />
-        <CreateChannelBtn>+</CreateChannelBtn>
+        <CreateChannelInput
+          placeholder="input new channel"
+          value={channelName}
+          onChange={e => setChannelName(e.target.value)}
+        />
+        <CreateChannelBtn onClick={() => createChannelAction()}>
+          +
+        </CreateChannelBtn>
       </CreateChannelFrame>
     </MainFrame>
   );
